@@ -1,0 +1,45 @@
+{% extends 'layout/main.twig' %}
+
+{% block title %} Creer un dossier {% endblock %}
+{% block description_title %}Creation d'un dossier{% endblock %}
+{% block root %} Creer {% endblock %}
+{% block nextRoot %} Dossier {% endblock %}
+
+{% block content %}
+    <div class="row" style="margin: 0 50px; background-color: #fff">
+        <form action="{{ site_url('Welcome/addFolder') }}" method="post">
+            <div class="col-md-6 form-group">
+                <label for="nom">Nom du dossier</label>
+                <input type="text" name="nomDossier" class="form-control"><br>
+
+                <button type="submit" class="btn btn-primary">Creer le dossier</button>
+            </div>
+        </form>
+    </div>
+
+    <div class="row" style="margin: 0 50px; background-color: #fff">
+        <table id="list_pays" class="display" style="width: 100%">
+            <thead>
+            <tr>
+                <th>Nom du dossier</th>
+                <th>code du dossier</th>
+                <th>Ajoute le </th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for folder in folders %}
+                <tr>
+                    <td>{{ folder.dossier_NOM }}</td>
+                    <td>{{ folder.dossier_CODE }}</td>
+                    <td>{{ folder.dossier_DATE_CREATION }}</td>
+                    <td>
+                        <button class="btn btn-primary">share</button>
+                        <button class="btn btn-danger">delete</button>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

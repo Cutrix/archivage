@@ -1,0 +1,110 @@
+{% extends 'layout/main.twig' %}
+
+{% block title %} Creer un document {% endblock %}
+{% block description_title %}Creation d'un document{% endblock %}
+{% block root %} Creer {% endblock %}
+{% block nextRoot %} Document {% endblock %}
+
+{% block content %}
+    <div class="row" style="margin: 0 50px; background-color: #fff">
+        <form action="" method="post" enctype="multipart/form-data">
+
+            <div class="form-group col-md-6">
+                <small style="font-weight: bold; color: red">
+                    {% if stateError %}
+                        <script>
+                            alert('Ajout effectuee !');
+                        </script>
+                    {% else %}
+                        {{ error }}
+                    {% endif %}
+                </small>
+                <br>
+
+                <label for="nomDoc">Nom du dossier</label>
+                <br>
+                <select id="nomDoc" name="nomDossier" class="form-control">
+                    <option value="{{ __session['id_user'] }}">Dossier par defaut</option>
+                    {% for folder in folders %}
+                        <option value="{{ folder.dossier_ID }}">{{ folder.dossier_NOM }}</option>
+                    {% endfor %}
+                </select>
+
+                <label for="nomDoc">Nom du document</label>
+                <input type="text" class="form-control" name="nomDoc" id="nomDoc"><br>
+
+                <label for="">Ajouter votre document</label>
+                <input type="file" class="form-control" name="doc"> <br>
+                <button type="submit" class="btn btn-success pull-right">Ajouter un document</button>
+            </div>
+        </form>
+    </div>
+
+    <div class="row" style="margin: 30px 50px; background-color: white;">
+        <table id="list_pays" class="display" style="width: 100%">
+            <thead>
+            <tr>
+                <th>Nom du document</th>
+                <th>code document</th>
+                <th>Ajoute le </th>
+                <th>Taille</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+                {% for doc in docs %}
+                    <tr>
+                        <td>{{ doc.document_NOM }}</td>
+                        <td>{{ doc.document_CODE_SAUVEGARDE }}</td>
+                        <td>{{ doc.document_DATE_AJOUT }}</td>
+                        <td>{{ doc.tailleDoc }} Ko</td>
+                        <td>
+                            <button class="btn btn-success" type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" onclick="passId({{ doc.document_ID }})"><i class="fa fa-share"></i></button>
+                            <button class="btn btn-danger"><i class="fa fa-trash"></i></button>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
+{% block shareDoc %}
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Partager un document</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form action="{{ site_url('Welcome/share') }}" method="post">
+                        <label for="user">La personne avec qui vous souhaiter partager le document</label>
+                        <select name="user" class="form-control">
+                            {% for usr in users %}
+                                <option value="{{ usr.user_ID }}">{{ usr.user_NAME }}</option>
+                            {% endfor %}
+                        </select>
+                        <input type="hidden" id="iddoc" value="" name="idDoc">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+                    <button type="submit" class="btn btn-success">Partager</button>
+                </div>
+                </form>
+            </div>
+        </div>
+        <script>
+            function passId(id) {
+                $('#iddoc').attr('value', id);
+            }
+        </script>
+    </div>
+    {% if __session['share'] is defined %}
+        <script>
+            alert('Partage effectuee')
+        </script>
+    {% endif %}
+{% endblock %}
